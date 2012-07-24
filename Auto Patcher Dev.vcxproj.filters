@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\ftp">
+      <UniqueIdentifier>{3b360e17-6d06-493b-a9e1-98866c22a961}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Runnable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ftp\BlockingSocket.cpp">
+      <Filter>Header Files\ftp</Filter>
+    </ClCompile>
+    <ClCompile Include="ftp\FTPClient.cpp">
+      <Filter>Header Files\ftp</Filter>
+    </ClCompile>
+    <ClCompile Include="ftp\FTPDataTypes.cpp">
+      <Filter>Header Files\ftp</Filter>
+    </ClCompile>
+    <ClCompile Include="ftp\FTPFileState.cpp">
+      <Filter>Header Files\ftp</Filter>
+    </ClCompile>
+    <ClCompile Include="ftp\FTPListParse.cpp">
+      <Filter>Header Files\ftp</Filter>
+    </ClCompile>
+    <ClCompile Include="CredentialsDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Helpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PatcherDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Runnable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ftp\BlockingSocket.h">
+      <Filter>Header Files\ftp</Filter>
+    </ClInclude>
+    <ClInclude Include="ftp\Definements.h">
+      <Filter>Header Files\ftp</Filter>
+    </ClInclude>
+    <ClInclude Include="ftp\FTPClient.h">
+      <Filter>Header Files\ftp</Filter>
+    </ClInclude>
+    <ClInclude Include="ftp\FTPDataTypes.h">
+      <Filter>Header Files\ftp</Filter>
+    </ClInclude>
+    <ClInclude Include="ftp\FTPFileState.h">
+      <Filter>Header Files\ftp</Filter>
+    </ClInclude>
+    <ClInclude Include="ftp\FTPListParse.h">
+      <Filter>Header Files\ftp</Filter>
+    </ClInclude>
+    <ClInclude Include="ftp\rc_smart_ptr.h">
+      <Filter>Header Files\ftp</Filter>
+    </ClInclude>
+    <ClInclude Include="ftp\stdafx.h">
+      <Filter>Header Files\ftp</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CredentialsDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Helpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PatcherDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Auto Patcher Dev.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
