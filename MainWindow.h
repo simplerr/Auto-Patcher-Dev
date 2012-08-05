@@ -1,6 +1,6 @@
 #pragma once
 #include "Runnable.h"
-#include "State.h"
+#include "BaseDialog.h"
 
 class FtpPatcher;
 
@@ -12,5 +12,5 @@ public:
 	void Init();
 	LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam);
 private:
-	State* mCurrentState;
+	BaseDialog* mCurrentDialog;
 };

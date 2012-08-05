@@ -1,8 +1,8 @@
 #pragma once
 
-#include "State.h"
+#include "BaseDialog.h"
 
-class CredentialsDialog : public State
+class CredentialsDialog : public BaseDialog
 {
 public:
 	CredentialsDialog();

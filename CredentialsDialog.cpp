@@ -5,6 +5,7 @@
 #include "CredentialsDialog.h"
 #include "Runnable.h"
 #include "Helpers.h"
+#include <Windowsx.h>
 
 using namespace std;
 
@@ -12,7 +13,8 @@ using namespace std;
 string hostname;
 string username;
 string password;
-string filename;
+string executable;
+string directory;
 
 // Procedure for the dialog box.
 LRESULT CALLBACK CredentialsDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
@@ -27,11 +29,11 @@ LRESULT CALLBACK CredentialsDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARA
 			hostname = GetText(GetDlgItem(hWndDlg, IDC_HOSTNAME));
 			username = GetText(GetDlgItem(hWndDlg, IDC_USERNAME));
 			password = GetText(GetDlgItem(hWndDlg, IDC_PASSWORD));
-			filename = GetText(GetDlgItem(hWndDlg, IDC_FILENAME));
+			executable = GetText(GetDlgItem(hWndDlg, IDC_EXECUTABLE));
+			directory = GetText(GetDlgItem(hWndDlg, IDC_DIRECTORY));
 
 			// Send message that will get catched by CredentialsDialog::MsgProc().
 			SendMessage(gMainWindow->GetHwnd(), WM_COMMAND, ID_GENERATE_FILE, NULL);
-			EndDialog(hWndDlg, 0);
 			break;
 		case IDEXIT:
 			EndDialog(hWndDlg, 0);
@@ -48,6 +50,7 @@ LRESULT CALLBACK CredentialsDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARA
 }
 
 CredentialsDialog::CredentialsDialog()
+	: BaseDialog(IDD_DIALOG1, (DLGPROC)CredentialsDlgProc)
 {
 	
 }
@@ -59,14 +62,29 @@ CredentialsDialog::~CredentialsDialog()
 
 void CredentialsDialog::Init()
 {
-	DialogBox(gMainWindow->GetInstance(), MAKEINTRESOURCE(IDD_DIALOG1), gMainWindow->GetHwnd(), (DLGPROC)CredentialsDlgProc);
+	// Check if there already exists a credentials file.
+	WIN32_FIND_DATA data;
+	if(FindFirstFile("credentials.txt", &data) != INVALID_HANDLE_VALUE  && GetLastError() != ERROR_FILE_NOT_FOUND) 
+	{
+		// Decrypt the information from the file.
+		string hostname, username, password, executable, directory;
+		Decrypt("credentials.txt", hostname, username, password, executable, directory);
+
+		// Set the edit box values.
+		Edit_SetText(GetDlgItem(GetHwnd(), IDC_HOSTNAME), hostname.c_str());
+		Edit_SetText(GetDlgItem(GetHwnd(), IDC_USERNAME), username.c_str());
+		Edit_SetText(GetDlgItem(GetHwnd(), IDC_PASSWORD), password.c_str());
+		Edit_SetText(GetDlgItem(GetHwnd(), IDC_EXECUTABLE), executable.c_str());
+		Edit_SetText(GetDlgItem(GetHwnd(), IDC_DIRECTORY), directory.c_str());
+	}
 }
 
 void CredentialsDialog::GenerateFile()
 {
+	// [TODO] Let Encrypt() handle this!
 	// Ouput the login information to a file.
-	ofstream fout("output.txt");
-	fout << hostname << "\n" << username << "\n" << password << "\n" << filename;
+	ofstream fout("credentials.txt");
+	fout << hostname << "\n" << username << "\n" << password << "\n" << executable << "\n" << directory;
 	fout.close();
 }
 
@@ -80,6 +98,8 @@ LRESULT CredentialsDialog::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		// Generate the credentials file.
 		case ID_GENERATE_FILE:
 			GenerateFile();
+			MessageBox(0, "Credentials successfully updated!", "Success", 0);
+			SendMessage(gMainWindow->GetHwnd(), WM_COMMAND, IDM_PATCHER_DIALOG, NULL);
 			break;
 		}
 		break;

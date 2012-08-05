@@ -1,7 +1,7 @@
 #pragma once
-#include "State.h"
+#include "BaseDialog.h"
 
-class PatcherDialog : public State
+class PatcherDialog : public BaseDialog
 {
 public:
 	PatcherDialog();
@@ -9,6 +9,7 @@ public:
 
 	void Init();
 
+	void UpdateInformation();
 	LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam);
 private:
 };

@@ -48,6 +48,12 @@
     <ClCompile Include="PatcherDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BaseDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FtpHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Runnable.h">
@@ -86,13 +92,16 @@
     <ClInclude Include="CredentialsDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="State.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Helpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PatcherDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FtpHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

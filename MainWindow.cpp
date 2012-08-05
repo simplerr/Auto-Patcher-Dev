@@ -13,9 +13,11 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #include "CredentialsDialog.h"
 #include "PatcherDialog.h"
 #include "Helpers.h"
+#include "FtpHandler.h"
 
 // Set the globals.
 Runnable*	gMainWindow		= 0;
+FtpHandler* gFtpHandler		= 0;
 
 using namespace std;
 
@@ -41,34 +43,45 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 MainWindow::MainWindow(HINSTANCE hInstance, string caption, int width, int height)
 	: Runnable(hInstance, caption, width, height)
 {
-	mCurrentState = NULL;
+	gFtpHandler = new FtpHandler("/simplers.org/data/", "data/");
+	mCurrentDialog = NULL;
 }
 	
 void MainWindow::Init()
 {
 	WIN32_FIND_DATA data;
 	// Create and init the state.
-	if(FindFirstFile("output.txt", &data) == INVALID_HANDLE_VALUE  && GetLastError() == ERROR_FILE_NOT_FOUND) 
-		mCurrentState = new CredentialsDialog();
+	if(FindFirstFile("credentials.txt", &data) == INVALID_HANDLE_VALUE  && GetLastError() == ERROR_FILE_NOT_FOUND) 
+		mCurrentDialog = new CredentialsDialog();
 	else 
-		mCurrentState = new PatcherDialog();
-
-	mCurrentState->Init();
+		mCurrentDialog = new PatcherDialog();
 }
 
 MainWindow::~MainWindow()
 {
-	delete mCurrentState;
+	delete gFtpHandler;
+	delete mCurrentDialog;
 }
 
 LRESULT MainWindow::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	if(wParam == ID_GENERATE_FILE)
 		int asda = 1;
+	else if(wParam == IDM_PATCHER_DIALOG) {
+		delete mCurrentDialog;
+		mCurrentDialog = new PatcherDialog();
+	}
+
+	// Message sent when the Patcher dialogs "edit credentials button is pressed".
+	if(lParam == IDM_EDIT_CREDENTIALS) {
+		delete mCurrentDialog;
+		mCurrentDialog = new CredentialsDialog();
+		mCurrentDialog->Init();
+	}
 
 	// Let the current state handle the message.
-	if(mCurrentState != NULL)
-		mCurrentState->MsgProc(msg, wParam, lParam);
+	if(mCurrentDialog != NULL)
+		mCurrentDialog->MsgProc(msg, wParam, lParam);
 
 	// Default MsgProc.
 	return Runnable::MsgProc(msg, wParam, lParam);

@@ -8,3 +8,4 @@ using namespace std;
 #define ID_GENERATE_FILE 2001
 
 string GetText(HWND hwnd);
+void Decrypt(string file, string& hostname, string& username, string& password, string& executable, string& directory);
