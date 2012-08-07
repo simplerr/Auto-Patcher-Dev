@@ -6,6 +6,9 @@
 using namespace std;
 
 #define ID_GENERATE_FILE 2001
+#define CREDENTIALS_FILE "data/credentials.txt"
 
 string GetText(HWND hwnd);
-void Decrypt(string file, string& hostname, string& username, string& password, string& executable, string& directory);
+string GetDate();
+void Decrypt(string file, string& version, string& updated, string& hostname, string& username, string& password, string& executable, string& directory);
+void Encrypt(string file, string version, string updated, string hostname, string username, string password, string executable, string directory);

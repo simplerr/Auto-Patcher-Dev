@@ -51,7 +51,7 @@ void MainWindow::Init()
 {
 	WIN32_FIND_DATA data;
 	// Create and init the state.
-	if(FindFirstFile("credentials.txt", &data) == INVALID_HANDLE_VALUE  && GetLastError() == ERROR_FILE_NOT_FOUND) 
+	if(FindFirstFile(CREDENTIALS_FILE, &data) == INVALID_HANDLE_VALUE  && GetLastError() == ERROR_FILE_NOT_FOUND) 
 		mCurrentDialog = new CredentialsDialog();
 	else 
 		mCurrentDialog = new PatcherDialog();

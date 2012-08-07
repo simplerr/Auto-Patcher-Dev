@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include "FtpHandler.h"
+#include "Helpers.h"
 
 FtpHandler::FtpHandler(string workingDirectory, string localDirectory)
 {
@@ -12,7 +13,7 @@ FtpHandler::FtpHandler(string workingDirectory, string localDirectory)
     WSAStartup(wVersionRequested, &wsaData);
 
 	// Load login credentials.
-	LoadCredentials("credentials.txt");
+	LoadCredentials(CREDENTIALS_FILE);
 
 	CLogonInfo logonInfo(mHost, 21, mUser, mPass);
 
@@ -85,18 +86,41 @@ void FtpHandler::DownloadAll(string remoteDirectory, string localDirectory)
 	cout << "\n";
 }
 
+void FtpHandler::UploadAll()
+{
+	// Skip the the first 2 files (. and ..)
+	WIN32_FIND_DATA data;
+	string dir = mLocalDirectory + "*";
+	HANDLE handle = FindFirstFile(dir.c_str(), &data);
+	FindNextFile(handle, &data);
+
+	while(GetLastError() != ERROR_NO_MORE_FILES)
+	{
+		FindNextFile(handle, &data);
+
+		if(GetLastError() != ERROR_NO_MORE_FILES) {
+			mFtpClient.Delete(mWorkingDirectory + data.cFileName);
+			mFtpClient.UploadFile(mLocalDirectory + data.cFileName, mWorkingDirectory + data.cFileName, false, CRepresentation(CType::Image()), true);
+		}
+	}
+}
+
 // Loads the login credentials from a text file.
 void FtpHandler::LoadCredentials(string file)
 {
-	std::ifstream fin(file);
-	fin >> mHost >> mHost >> mUser >> mPass;
-	fin.close();
+	string trash;
+	Decrypt(CREDENTIALS_FILE, trash, trash, mHost, mUser, mPass, trash, trash);
 }
 
 int FtpHandler::GetVersion()
 {
-	// Compare the version files.ftp
-	mFtpClient.DownloadFile(mWorkingDirectory + "credentials.txt", mLocalDirectory + "tmp_credentials.txt", CType::Image(), true); 
+	// Compare the version files.
+	string tmp = mLocalDirectory + "tmp_credentials.txt";
+	remove(tmp.c_str());
+
+	if(!mFtpClient.DownloadFile(mWorkingDirectory + "credentials.txt", tmp, CType::Image(), true)) 
+		return -1;
+
 	std::ifstream fin("data/tmp_credentials.txt");
 
 	// Read the versions.
@@ -104,8 +128,7 @@ int FtpHandler::GetVersion()
 	fin >> ftpVersion;
 	fin.close();
 
-	// Remove temp file.
-	remove("data/ftp_version.txt");
+	remove("data/tmp_credentials.txt");
 
 	return ftpVersion;
 }
@@ -132,4 +155,25 @@ int FtpHandler::GetTotalSize()
 	}
 
 	return size;
+}
+
+string FtpHandler::GetModifyDate()
+{
+	// Compare the version files.
+	string tmp = mLocalDirectory + "tmp_credentials.txt";
+	remove(tmp.c_str());
+
+	if(!mFtpClient.DownloadFile(mWorkingDirectory + "credentials.txt", tmp, CType::Image(), true)) 
+		return "error";
+
+	std::ifstream fin("data/tmp_credentials.txt");
+
+	// Read the date (second line).
+	string date;
+	fin >> date >> date;
+	fin.close();
+
+	remove("data/tmp_credentials.txt");
+
+	return date;
 }

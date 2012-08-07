@@ -1,20 +1,17 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <fstream>
+#include <Windowsx.h>
 #include "resource.h"
 #include "CredentialsDialog.h"
 #include "Runnable.h"
 #include "Helpers.h"
-#include <Windowsx.h>
+#include "Data.h"
 
 using namespace std;
 
 // Used to pass data between dialog box and CredentialsDialog
-string hostname;
-string username;
-string password;
-string executable;
-string directory;
+Data dialogData;
 
 // Procedure for the dialog box.
 LRESULT CALLBACK CredentialsDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
@@ -26,11 +23,11 @@ LRESULT CALLBACK CredentialsDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARA
 		{
 		case IDGENERATE:
 			// Store the input box values.
-			hostname = GetText(GetDlgItem(hWndDlg, IDC_HOSTNAME));
-			username = GetText(GetDlgItem(hWndDlg, IDC_USERNAME));
-			password = GetText(GetDlgItem(hWndDlg, IDC_PASSWORD));
-			executable = GetText(GetDlgItem(hWndDlg, IDC_EXECUTABLE));
-			directory = GetText(GetDlgItem(hWndDlg, IDC_DIRECTORY));
+			dialogData.SetHostname(GetText(GetDlgItem(hWndDlg, IDC_HOSTNAME)));
+			dialogData.SetUsername(GetText(GetDlgItem(hWndDlg, IDC_USERNAME)));
+			dialogData.SetPassword(GetText(GetDlgItem(hWndDlg, IDC_PASSWORD)));
+			dialogData.SetExecutable(GetText(GetDlgItem(hWndDlg, IDC_EXECUTABLE)));
+			dialogData.SetDirectory(GetText(GetDlgItem(hWndDlg, IDC_DIRECTORY)));
 
 			// Send message that will get catched by CredentialsDialog::MsgProc().
 			SendMessage(gMainWindow->GetHwnd(), WM_COMMAND, ID_GENERATE_FILE, NULL);
@@ -64,28 +61,36 @@ void CredentialsDialog::Init()
 {
 	// Check if there already exists a credentials file.
 	WIN32_FIND_DATA data;
-	if(FindFirstFile("credentials.txt", &data) != INVALID_HANDLE_VALUE  && GetLastError() != ERROR_FILE_NOT_FOUND) 
+	if(FindFirstFile(CREDENTIALS_FILE, &data) != INVALID_HANDLE_VALUE  && GetLastError() != ERROR_FILE_NOT_FOUND) 
 	{
 		// Decrypt the information from the file.
-		string hostname, username, password, executable, directory;
-		Decrypt("credentials.txt", hostname, username, password, executable, directory);
+		Data data(CREDENTIALS_FILE);
 
 		// Set the edit box values.
-		Edit_SetText(GetDlgItem(GetHwnd(), IDC_HOSTNAME), hostname.c_str());
-		Edit_SetText(GetDlgItem(GetHwnd(), IDC_USERNAME), username.c_str());
-		Edit_SetText(GetDlgItem(GetHwnd(), IDC_PASSWORD), password.c_str());
-		Edit_SetText(GetDlgItem(GetHwnd(), IDC_EXECUTABLE), executable.c_str());
-		Edit_SetText(GetDlgItem(GetHwnd(), IDC_DIRECTORY), directory.c_str());
+		Edit_SetText(GetDlgItem(GetHwnd(), IDC_HOSTNAME), data.GetHostname().c_str());
+		Edit_SetText(GetDlgItem(GetHwnd(), IDC_USERNAME), data.GetUsername().c_str());
+		Edit_SetText(GetDlgItem(GetHwnd(), IDC_PASSWORD), data.GetPassword().c_str());
+		Edit_SetText(GetDlgItem(GetHwnd(), IDC_EXECUTABLE), data.GetExecutable().c_str());
+		Edit_SetText(GetDlgItem(GetHwnd(), IDC_DIRECTORY), data.GetDirectory().c_str());
 	}
 }
 
 void CredentialsDialog::GenerateFile()
 {
-	// [TODO] Let Encrypt() handle this!
-	// Ouput the login information to a file.
-	ofstream fout("credentials.txt");
-	fout << hostname << "\n" << username << "\n" << password << "\n" << executable << "\n" << directory;
-	fout.close();
+	string version;
+
+	// Check if there already exists a credentials file.
+	WIN32_FIND_DATA data;
+	if(FindFirstFile(CREDENTIALS_FILE, &data) != INVALID_HANDLE_VALUE  && GetLastError() != ERROR_FILE_NOT_FOUND) 
+	{
+		// Read in the version. 
+		ifstream fin(CREDENTIALS_FILE);
+		fin >> version;
+		fin.close();
+	}
+
+	// Ouput the data to the file.
+	dialogData.WriteInformation(CREDENTIALS_FILE);
 }
 
 LRESULT CredentialsDialog::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
@@ -100,6 +105,9 @@ LRESULT CredentialsDialog::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 			GenerateFile();
 			MessageBox(0, "Credentials successfully updated!", "Success", 0);
 			SendMessage(gMainWindow->GetHwnd(), WM_COMMAND, IDM_PATCHER_DIALOG, NULL);
+			break;
+		case IDC_UPDATE_FILES:
+
 			break;
 		}
 		break;

@@ -1,14 +1,14 @@
-﻿Build started 2012-08-06 01:02:09.
+﻿Build started 2012-08-07 15:51:30.
      1>Project "F:\Users\Axel\Documents\Visual Studio 11\Projects\Auto Patcher Dev\Auto Patcher Dev\Auto Patcher Dev.vcxproj" on node 2 (Build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\Auto Patcher Dev.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
          F:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt PatcherDialog.cpp
          PatcherDialog.cpp
-     1>f:\users\axel\documents\visual studio 11\projects\auto patcher dev\auto patcher dev\patcherdialog.cpp(64): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>f:\users\axel\documents\visual studio 11\projects\auto patcher dev\auto patcher dev\patcherdialog.cpp(69): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  f:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(357) : see declaration of 'sprintf'
-     1>f:\users\axel\documents\visual studio 11\projects\auto patcher dev\auto patcher dev\patcherdialog.cpp(65): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-     1>f:\users\axel\documents\visual studio 11\projects\auto patcher dev\auto patcher dev\patcherdialog.cpp(66): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>f:\users\axel\documents\visual studio 11\projects\auto patcher dev\auto patcher dev\patcherdialog.cpp(70): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>f:\users\axel\documents\visual studio 11\projects\auto patcher dev\auto patcher dev\patcherdialog.cpp(71): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
        ResourceCompile:
          All outputs are up-to-date.
        ManifestResourceCompile:
@@ -17,6 +17,7 @@
          F:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\Users\Axel\Documents\Visual Studio 11\Projects\Auto Patcher Dev\Debug\Auto Patcher Dev.exe" /INCREMENTAL /NOLOGO comctl32.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Auto Patcher Dev.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"F:\Users\Axel\Documents\Visual Studio 11\Projects\Auto Patcher Dev\Debug\Auto Patcher Dev.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\Users\Axel\Documents\Visual Studio 11\Projects\Auto Patcher Dev\Debug\Auto Patcher Dev.lib" /MACHINE:X86 "Debug\Auto Patcher Dev.res"
          Debug\BaseDialog.obj
          Debug\CredentialsDialog.obj
+         Debug\Data.obj
          Debug\FtpHandler.obj
          Debug\BlockingSocket.obj
          Debug\FTPClient.obj
@@ -41,4 +42,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.31
+Time Elapsed 00:00:01.35

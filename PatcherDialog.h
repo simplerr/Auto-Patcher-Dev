@@ -10,6 +10,7 @@ public:
 	void Init();
 
 	void UpdateInformation();
+	void UploadFiles();
 	LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam);
 private:
 };

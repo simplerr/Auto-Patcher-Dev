@@ -81,6 +81,7 @@
   <ItemGroup>
     <ClCompile Include="BaseDialog.cpp" />
     <ClCompile Include="CredentialsDialog.cpp" />
+    <ClCompile Include="Data.cpp" />
     <ClCompile Include="FtpHandler.cpp" />
     <ClCompile Include="ftp\BlockingSocket.cpp" />
     <ClCompile Include="ftp\FTPClient.cpp" />
@@ -94,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CredentialsDialog.h" />
+    <ClInclude Include="Data.h" />
     <ClInclude Include="FtpHandler.h" />
     <ClInclude Include="ftp\BlockingSocket.h" />
     <ClInclude Include="ftp\Definements.h" />
