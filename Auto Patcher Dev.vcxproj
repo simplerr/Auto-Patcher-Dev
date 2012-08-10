@@ -43,6 +43,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>F:\Users\Axel\Documents\Visual Studio 11\Projects\zip_utils_src;F:\Program Files (x86)\Visual Leak Detector\include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -80,6 +81,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\zip_utils_src\unzip.cpp" />
+    <ClCompile Include="..\..\zip_utils_src\zip.cpp" />
     <ClCompile Include="BaseDialog.cpp" />
     <ClCompile Include="CredentialsDialog.cpp" />
     <ClCompile Include="Data.cpp" />
@@ -95,6 +98,8 @@
     <ClCompile Include="Runnable.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\zip_utils_src\unzip.h" />
+    <ClInclude Include="..\..\zip_utils_src\zip.h" />
     <ClInclude Include="CredentialsDialog.h" />
     <ClInclude Include="Data.h" />
     <ClInclude Include="FtpHandler.h" />

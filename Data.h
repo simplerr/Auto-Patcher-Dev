@@ -4,40 +4,25 @@
 using namespace std;
 
 //! Stores the login data and takes care of encryption/decryption.
-class Data
+struct Data
 {
-public:
 	Data(string file);
 	Data();
 	~Data();
 
+	void SetData(int version, int files, long size, string filename, string modifyDate, string hostname, string username, string password, string directory,
+		string executable);
 	void ReadInformation(string file);
 	void WriteInformation(string file);
 
-	int GetVersion();
-	string GetModifyDate();
-	string GetHostname();
-	string GetUsername();
-	string GetPassword();
-	string GetDirectory();
-	string GetExecutable();
-
-	void SetData(int version, string date, string hostname, string username, string password, string executable, string directory);
-	void SetVersion(int version);
-	void SetModifyDate(string date);
-	void SetHostname(string hostname);
-	void SetUsername(string username);
-	void SetPassword(string password);
-	void SetDirectory(string directory);
-	void SetExecutable(string executable);
-
-private:
-	int mVersion;
-	string mFilename;
-	string mModifyDate;
-	string mHostname;
-	string mUsername;
-	string mPassword;
-	string mDirectory;
-	string mExecutable;
+	int version;
+	int files;
+	long size;
+	string filename;
+	string modifyDate;
+	string hostname;
+	string username;
+	string password;
+	string directory;
+	string executable;
 };

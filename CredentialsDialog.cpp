@@ -23,11 +23,11 @@ LRESULT CALLBACK CredentialsDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARA
 		{
 		case IDGENERATE:
 			// Store the input box values.
-			dialogData.SetHostname(GetText(GetDlgItem(hWndDlg, IDC_HOSTNAME)));
-			dialogData.SetUsername(GetText(GetDlgItem(hWndDlg, IDC_USERNAME)));
-			dialogData.SetPassword(GetText(GetDlgItem(hWndDlg, IDC_PASSWORD)));
-			dialogData.SetExecutable(GetText(GetDlgItem(hWndDlg, IDC_EXECUTABLE)));
-			dialogData.SetDirectory(GetText(GetDlgItem(hWndDlg, IDC_DIRECTORY)));
+			dialogData.hostname = GetText(GetDlgItem(hWndDlg, IDC_HOSTNAME));
+			dialogData.username = GetText(GetDlgItem(hWndDlg, IDC_USERNAME));
+			dialogData.password = GetText(GetDlgItem(hWndDlg, IDC_PASSWORD));
+			dialogData.executable = GetText(GetDlgItem(hWndDlg, IDC_EXECUTABLE));
+			dialogData.directory = GetText(GetDlgItem(hWndDlg, IDC_DIRECTORY));
 
 			// Send message that will get catched by CredentialsDialog::MsgProc().
 			SendMessage(gMainWindow->GetHwnd(), WM_COMMAND, ID_GENERATE_FILE, NULL);
@@ -67,11 +67,11 @@ void CredentialsDialog::Init()
 		Data data(CREDENTIALS_FILE);
 
 		// Set the edit box values.
-		Edit_SetText(GetDlgItem(GetHwnd(), IDC_HOSTNAME), data.GetHostname().c_str());
-		Edit_SetText(GetDlgItem(GetHwnd(), IDC_USERNAME), data.GetUsername().c_str());
-		Edit_SetText(GetDlgItem(GetHwnd(), IDC_PASSWORD), data.GetPassword().c_str());
-		Edit_SetText(GetDlgItem(GetHwnd(), IDC_EXECUTABLE), data.GetExecutable().c_str());
-		Edit_SetText(GetDlgItem(GetHwnd(), IDC_DIRECTORY), data.GetDirectory().c_str());
+		Edit_SetText(GetDlgItem(GetHwnd(), IDC_HOSTNAME), data.hostname.c_str());
+		Edit_SetText(GetDlgItem(GetHwnd(), IDC_USERNAME), data.username.c_str());
+		Edit_SetText(GetDlgItem(GetHwnd(), IDC_PASSWORD), data.password.c_str());
+		Edit_SetText(GetDlgItem(GetHwnd(), IDC_EXECUTABLE), data.executable.c_str());
+		Edit_SetText(GetDlgItem(GetHwnd(), IDC_DIRECTORY), data.directory.c_str());
 	}
 }
 

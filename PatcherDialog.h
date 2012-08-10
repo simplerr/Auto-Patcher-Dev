@@ -12,11 +12,11 @@ public:
 	void Init();
 
 	void UpdateInformation();
-	void UploadFiles();
+	void UploadPatch();
 	void AddBytesSent(long bytes);
 	void AddBytesReceived(long bytes);
 	void SetFileSize(long size);
-	void SetUploading(string file);
+	void SetProgressStatus(string status);
 	LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam);
 private:
 	ProgressObserver* mObserver;

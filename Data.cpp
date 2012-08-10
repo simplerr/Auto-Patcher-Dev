@@ -3,14 +3,14 @@
 
 Data::Data(string file)
 {
-	mFilename = file;
+	filename = file;
 	ReadInformation(file);
 }
 	
 Data::Data()
 {
-	mFilename = "none";
-	SetModifyDate("date");
+	filename = "none";
+	modifyDate = "never";
 }
 
 Data::~Data()
@@ -22,7 +22,7 @@ Data::~Data()
 void Data::ReadInformation(string file)
 {
 	ifstream fin(file);
-	fin >> mVersion >> mModifyDate >> mHostname >> mUsername >> mPassword >> mExecutable >> mDirectory;
+	fin >> hostname >> username >> password >> executable >> directory >> version >> modifyDate >> files >> size; 
 	fin.close();
 }
 	
@@ -30,87 +30,22 @@ void Data::ReadInformation(string file)
 void Data::WriteInformation(string file)
 {
 	ofstream fout(file);
-	fout << mVersion << "\n" << mModifyDate  << "\n" << mHostname << "\n" << mUsername << "\n" << mPassword << "\n" << mExecutable << "\n" << mDirectory;
+	fout << hostname << "\n" << username << "\n" << password << "\n" << executable << "\n" << directory << "\n";
+	fout << version << "\n" << modifyDate << "\n" << files << "\n" << size; 
 	fout.close();
 }
 
-int Data::GetVersion()
+void Data::SetData(int version, int files, long size, string filename, string modifyDate, string hostname, string username, string password, string directory,
+		string executable)
 {
-	return mVersion;
-}
-	
-string Data::GetModifyDate()
-{
-	return mModifyDate;
-}
-	
-string Data::GetHostname()
-{
-	return mHostname;
-}
-	
-string Data::GetUsername()
-{
-	return mUsername;
-}
-	
-string Data::GetPassword()
-{
-	return mPassword;
-}
-
-string Data::GetDirectory()
-{
-	return mDirectory;
-}
-	
-string Data::GetExecutable()
-{
-	return mExecutable;
-}
-
-void Data::SetData(int version, string date, string hostname, string username, string password, string executable, string directory)
-{
-	SetVersion(version);
-	SetModifyDate(date);
-	SetHostname(hostname);
-	SetUsername(username);
-	SetPassword(password);
-	SetExecutable(executable);
-	SetDirectory(directory);
-}
-
-void Data::SetVersion(int version)
-{
-	mVersion = version;
-}
-
-void Data::SetModifyDate(string date)
-{
-	mModifyDate = date;
-}
-	
-void Data::SetHostname(string hostname)
-{
-	mHostname = hostname;
-}
-	
-void Data::SetUsername(string username)
-{
-	mUsername = username;
-}
-	
-void Data::SetPassword(string password)
-{
-	mPassword = password;
-}
-
-void Data::SetDirectory(string directory)
-{
-	mDirectory = directory;
-}
-	
-void Data::SetExecutable(string executable)
-{
-	mExecutable = executable;
+	this->version = version;
+	this->files = files;
+	this->size = size;
+	this->filename = filename;
+	this->modifyDate = modifyDate;
+	this->hostname = hostname;
+	this->username = username;
+	this->password = password;
+	this->directory = directory;
+	this->executable = executable;
 }

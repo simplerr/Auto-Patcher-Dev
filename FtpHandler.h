@@ -21,7 +21,7 @@ class ProgressObserver : public CFTPClient::CNotification
 public:
 	void SetDialog(PatcherDialog* dialog);
 	void SetFileSize(long size); 
-	void SetUploading(string file);
+	void SetStatus(string status);
 	void OnBytesReceived(const TByteVector& /*vBuffer*/, long /*lReceivedBytes*/);
     void OnBytesSent(const TByteVector& /*vBuffer*/, long /*lSentBytes*/); 
 private:
@@ -36,7 +36,7 @@ public:
 
 	bool NewVersion();
 	void DownloadAll(string remoteDirectory, string localDirectory);
-	void UploadAll();
+	void UploadFile(string dest, string file);
 	void LoadCredentials(string file);
 	int GetVersion();
 	int GetNumFiles();

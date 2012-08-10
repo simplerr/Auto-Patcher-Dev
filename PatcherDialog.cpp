@@ -1,12 +1,15 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <windowsx.h>
+#include <fstream>
 #include "resource.h"
 #include "Runnable.h"
 #include "PatcherDialog.h"
 #include "FtpHandler.h"
 #include "Helpers.h"
 #include "Data.h"
+#include "zip.h"
+#include "unzip.h"
 
 #include <shlobj.h>		//for Shell API
 #include <Shlwapi.h>	//for Shell API
@@ -90,29 +93,40 @@ void PatcherDialog::UpdateInformation()
 	// Local information.
 }
 
-void PatcherDialog::UploadFiles()
+void PatcherDialog::UploadPatch()
 {
-	//SendDlgItemMessage(GetHwnd(), IDC_PROGRESS1, PBM_SETPOS, 100,  0);
+	// Remove the data.zip if there is any.
+	remove("data.zip");
 
-	//return;
+	// Create the new archive and upload it.
+	ArchiveInfo info;
+	CreateArchive("data", "data.zip", info);
+	mObserver->SetStatus("Creating archive...");
+	Sleep(400);
+	gFtpHandler->UploadFile("/simplers.org/data/", "data.zip");
 
-	// Load the credentials data.
-	Data data(CREDENTIALS_FILE);
+	// Create the version information file.
+	Data data("data.txt");
+	data.version = gFtpHandler->GetVersion() + 1;
+	data.modifyDate = GetDate();
+	data.files = info.files;
+	data.size = info.size;
+	data.WriteInformation("data.txt");
 
-	// Update version, modify date and write to the credentials file.
-	data.SetVersion(gFtpHandler->GetVersion() + 1);
-	data.SetModifyDate(GetDate());
-	data.WriteInformation(CREDENTIALS_FILE);
+	// Upload the info file.
+	gFtpHandler->UploadFile("/simplers.org/data/", "data.txt");
 
-	// Upload all files. 
-	gFtpHandler->UploadAll();
+	// Remove the temp info file.
+	remove("info.txt");
+
+	UpdateInformation();
 }
 
 LRESULT PatcherDialog::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	// Upload all files to the FTP server.
 	if(lParam == IDM_UPDATE_FILES)
-		UploadFiles();
+		UploadPatch();
 
 	return 0;
 }
@@ -136,7 +150,7 @@ void PatcherDialog::SetFileSize(long size)
 	SendDlgItemMessage(GetHwnd(), IDC_PROGRESS1, PBM_SETPOS, 0, 0);
 }
 
-void PatcherDialog::SetUploading(string file)
+void PatcherDialog::SetProgressStatus(string status)
 {
-	Static_SetText(GetDlgItem(GetHwnd(), IDC_UPLOADING), file.c_str());
+	Static_SetText(GetDlgItem(GetHwnd(), IDC_UPLOADING), status.c_str());
 }

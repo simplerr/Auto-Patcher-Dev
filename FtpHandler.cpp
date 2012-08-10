@@ -4,6 +4,7 @@
 #include "Helpers.h"
 #include "PatcherDialog.h"
 #include "MainWindow.h"
+#include "Data.h"
 
 void ProgressObserver::SetDialog(PatcherDialog* dialog)
 {
@@ -15,9 +16,9 @@ void ProgressObserver::SetFileSize(long size)
 	mDialog->SetFileSize(size);
 }
 
-void ProgressObserver::SetUploading(string file)
+void ProgressObserver::SetStatus(string status)
 {
-	mDialog->SetUploading(file);
+	mDialog->SetProgressStatus(status);
 }
 
 void ProgressObserver::OnBytesReceived(const TByteVector& vBuffer, long lReceivedBytes)
@@ -113,102 +114,77 @@ void FtpHandler::DownloadAll(string remoteDirectory, string localDirectory)
 	cout << "\n";
 }
 
-void FtpHandler::UploadAll()
+void FtpHandler::UploadFile(string dest, string file)
 {
-	// Skip the the first 2 files (. and ..)
-	WIN32_FIND_DATA data;
-	string dir = mLocalDirectory + "*";
-	HANDLE handle = FindFirstFile(dir.c_str(), &data);
-	FindNextFile(handle, &data);
+	mObserver->SetFileSize(FileSize(file));
+	mObserver->SetStatus("Uploading: " + file);
+		
+	mFtpClient.Delete(dest + file);
+	mFtpClient.UploadFile(file, dest + file, false, CRepresentation(CType::Image()), true);
 
-	while(GetLastError() != ERROR_NO_MORE_FILES)
-	{
-		FindNextFile(handle, &data);
-
-		if(GetLastError() != ERROR_NO_MORE_FILES) {
-			mObserver->SetFileSize(FileSize(mLocalDirectory + data.cFileName));
-			mObserver->SetUploading("Uploading: " + mLocalDirectory + data.cFileName);
-			mFtpClient.Delete(mWorkingDirectory + data.cFileName);
-			mFtpClient.UploadFile(mLocalDirectory + data.cFileName, mWorkingDirectory + data.cFileName, false, CRepresentation(CType::Image()), true);
-			TByteVector v;
-			mObserver->OnBytesSent(v, 0);
-		}
-	}
-
-	mObserver->SetUploading("Latest version uploaded!");
+	mObserver->SetStatus("Latest version uploaded!");
 }
 
 // Loads the login credentials from a text file.
 void FtpHandler::LoadCredentials(string file)
 {
 	string trash;
-	Decrypt(CREDENTIALS_FILE, trash, trash, mHost, mUser, mPass, trash, trash);
+	ifstream fin(file);
+
+	fin >> mHost >> mUser >> mPass;
+	fin.close();
 }
 
 int FtpHandler::GetVersion()
 {
-	// Compare the version files.
-	string tmp = mLocalDirectory + "tmp_credentials.txt";
-	remove(tmp.c_str());
+	remove("tmp.txt");
 
-	if(!mFtpClient.DownloadFile(mWorkingDirectory + "credentials.txt", tmp, CType::Image(), true)) 
-		return -1;
+	// Download the info.txt file
+	if(!mFtpClient.DownloadFile(mWorkingDirectory + "data.txt", "tmp.txt", CType::Image(), true)) 
+		return 0;
 
-	std::ifstream fin("data/tmp_credentials.txt");
-
-	// Read the versions.
-	int ftpVersion;
-	fin >> ftpVersion;
-	fin.close();
-
-	remove("data/tmp_credentials.txt");
-
-	return ftpVersion;
+	// Read the version.
+	Data data("tmp.txt");
+	return data.version;
 }
 	
 int FtpHandler::GetNumFiles()
 {
-	// Get directory listing.
-	TSpFTPFileStatusVector list;
-	mFtpClient.List(mWorkingDirectory, list, true);
+	remove("tmp.txt");
 
-	return list.size() - 2;
+	// Download the info.txt file.
+	if(!mFtpClient.DownloadFile(mWorkingDirectory + "data.txt", "tmp.txt", CType::Image(), true)) 
+		return 0;
+
+	// Read num files.
+	Data data("tmp.txt");
+	return data.files;
 }
 	
 int FtpHandler::GetTotalSize()
 {
-	TSpFTPFileStatusVector list;
-	mFtpClient.List(mWorkingDirectory, list, true);
-	
-	// Loop through and add all file sizes.
-	int size = 0;
-	for(auto iter = list.begin() + 2; iter != list.end(); iter++) {
-		TSpFTPFileStatus file = (*iter);
-		size += file->Size();
-	}
+	remove("tmp.txt");
 
-	return size;
+	// Download the info.txt file.
+	if(!mFtpClient.DownloadFile(mWorkingDirectory + "data.txt", "tmp.txt", CType::Image(), true)) 
+		return 0;
+		
+	// Read total size.
+	Data data("tmp.txt");
+	return data.size;
 }
 
 string FtpHandler::GetModifyDate()
 {
-	// Compare the version files.
-	string tmp = mLocalDirectory + "tmp_credentials.txt";
-	remove(tmp.c_str());
+	remove("tmp.txt");
 
-	if(!mFtpClient.DownloadFile(mWorkingDirectory + "credentials.txt", tmp, CType::Image(), true)) 
-		return "error";
+	// Download the info.txt file.
+	if(!mFtpClient.DownloadFile(mWorkingDirectory + "data.txt", "tmp.txt", CType::Image(), true)) 
+		return "never";
 
-	std::ifstream fin("data/tmp_credentials.txt");
-
-	// Read the date (second line).
-	string date;
-	fin >> date >> date;
-	fin.close();
-
-	remove("data/tmp_credentials.txt");
-
-	return date;
+	// Read the modify date.
+	Data data("tmp.txt");
+	return data.modifyDate;
 }
 
 void FtpHandler::SetObserver(ProgressObserver* observer)

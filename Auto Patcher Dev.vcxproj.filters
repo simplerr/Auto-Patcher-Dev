@@ -16,6 +16,9 @@
     <Filter Include="Header Files\ftp">
       <UniqueIdentifier>{3b360e17-6d06-493b-a9e1-98866c22a961}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\zip">
+      <UniqueIdentifier>{1ef54eab-6c29-4494-becf-3974a2974850}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Runnable.cpp">
@@ -56,6 +59,12 @@
     </ClCompile>
     <ClCompile Include="Data.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\zip_utils_src\zip.cpp">
+      <Filter>Source Files\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\zip_utils_src\unzip.cpp">
+      <Filter>Source Files\zip</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +118,12 @@
     </ClInclude>
     <ClInclude Include="Data.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\zip_utils_src\zip.h">
+      <Filter>Source Files\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\zip_utils_src\unzip.h">
+      <Filter>Source Files\zip</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
