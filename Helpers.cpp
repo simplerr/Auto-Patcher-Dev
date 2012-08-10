@@ -43,3 +43,31 @@ string GetDate()
 
 	return date;
 }
+
+long SizeOfFolder(string folder)
+{
+	long size = 0;
+
+	WIN32_FIND_DATAA data;
+	string dir = folder + ".";
+	FindFirstFile(dir.c_str(), &data);
+	return 0;
+}
+
+long FileSize(string file)
+{
+	FILE *pFile = NULL;
+
+	fopen_s(&pFile, file.c_str(), "rb");
+
+	// Set the file pointer to end of file.
+	fseek(pFile, 0, SEEK_END);
+
+	// Get the file size.
+	int size = ftell(pFile);
+
+	// Close stream and release buffer.
+	fclose(pFile);
+
+	return size;
+}

@@ -85,10 +85,10 @@ int Runnable::Run()
 	while(msg.message != WM_QUIT)
 	{
 		// If there are Window messages then process them
-		if(PeekMessage( &msg, 0, 0, 0, PM_REMOVE ))
+		if(PeekMessage(&msg, 0, 0, 0, PM_REMOVE ))
 		{
-            TranslateMessage( &msg );
-            DispatchMessage( &msg );
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
 		}
     }
 	return (int)msg.wParam;

@@ -12,3 +12,5 @@ string GetText(HWND hwnd);
 string GetDate();
 void Decrypt(string file, string& version, string& updated, string& hostname, string& username, string& password, string& executable, string& directory);
 void Encrypt(string file, string version, string updated, string hostname, string username, string password, string executable, string directory);
+long SizeOfFolder(string folder);
+long FileSize(string file);

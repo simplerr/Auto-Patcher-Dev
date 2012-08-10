@@ -2,6 +2,33 @@
 #include <iostream>
 #include "FtpHandler.h"
 #include "Helpers.h"
+#include "PatcherDialog.h"
+#include "MainWindow.h"
+
+void ProgressObserver::SetDialog(PatcherDialog* dialog)
+{
+	mDialog = dialog;
+}
+
+void ProgressObserver::SetFileSize(long size)
+{
+	mDialog->SetFileSize(size);
+}
+
+void ProgressObserver::SetUploading(string file)
+{
+	mDialog->SetUploading(file);
+}
+
+void ProgressObserver::OnBytesReceived(const TByteVector& vBuffer, long lReceivedBytes)
+{
+	mDialog->AddBytesReceived(lReceivedBytes);
+}
+    
+void ProgressObserver::OnBytesSent(const TByteVector& vBuffer, long lSentBytes)
+{
+	mDialog->AddBytesSent(lSentBytes);
+}
 
 FtpHandler::FtpHandler(string workingDirectory, string localDirectory)
 {
@@ -99,10 +126,16 @@ void FtpHandler::UploadAll()
 		FindNextFile(handle, &data);
 
 		if(GetLastError() != ERROR_NO_MORE_FILES) {
+			mObserver->SetFileSize(FileSize(mLocalDirectory + data.cFileName));
+			mObserver->SetUploading("Uploading: " + mLocalDirectory + data.cFileName);
 			mFtpClient.Delete(mWorkingDirectory + data.cFileName);
 			mFtpClient.UploadFile(mLocalDirectory + data.cFileName, mWorkingDirectory + data.cFileName, false, CRepresentation(CType::Image()), true);
+			TByteVector v;
+			mObserver->OnBytesSent(v, 0);
 		}
 	}
+
+	mObserver->SetUploading("Latest version uploaded!");
 }
 
 // Loads the login credentials from a text file.
@@ -176,4 +209,10 @@ string FtpHandler::GetModifyDate()
 	remove("data/tmp_credentials.txt");
 
 	return date;
+}
+
+void FtpHandler::SetObserver(ProgressObserver* observer)
+{
+	mObserver = observer;
+	mFtpClient.AttachObserver(mObserver);
 }

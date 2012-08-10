@@ -14,6 +14,20 @@ Passive mode has to be on in all function calls, fPasv = true.
 
 */
 
+class PatcherDialog;
+
+class ProgressObserver : public CFTPClient::CNotification
+{
+public:
+	void SetDialog(PatcherDialog* dialog);
+	void SetFileSize(long size); 
+	void SetUploading(string file);
+	void OnBytesReceived(const TByteVector& /*vBuffer*/, long /*lReceivedBytes*/);
+    void OnBytesSent(const TByteVector& /*vBuffer*/, long /*lSentBytes*/); 
+private:
+	PatcherDialog* mDialog;
+};
+
 class FtpHandler
 {
 public:
@@ -28,8 +42,10 @@ public:
 	int GetNumFiles();
 	int GetTotalSize();
 	string GetModifyDate();
+	void SetObserver(ProgressObserver* observer);
 private:
 	CFTPClient mFtpClient;
+	ProgressObserver* mObserver;
 	string mWorkingDirectory;
 	string mLocalDirectory;
 	string mHost, mUser, mPass;
