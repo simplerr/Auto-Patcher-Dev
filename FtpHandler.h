@@ -37,6 +37,7 @@ public:
 	FtpHandler();
 	~FtpHandler();
 
+	void Connect();
 	bool NewVersion();
 	void DownloadAll(string remoteDirectory, string localDirectory);
 	void UploadFile(string dest, string file);

@@ -77,18 +77,6 @@ void CredentialsDialog::Init()
 
 void CredentialsDialog::GenerateFile()
 {
-	//string version;
-
-	//// Check if there already exists a credentials file.
-	//WIN32_FIND_DATA data;
-	//if(FindFirstFile(CREDENTIALS_FILE, &data) != INVALID_HANDLE_VALUE  && GetLastError() != ERROR_FILE_NOT_FOUND) 
-	//{
-	//	// Read in the version. 
-	//	ifstream fin(CREDENTIALS_FILE);
-	//	fin >> version;
-	//	fin.close();
-	//}
-
 	// Ouput the data to the file.
 	dialogData.WriteInformation(CREDENTIALS_FILE);
 	dialogData.ReadInformation(CREDENTIALS_FILE);

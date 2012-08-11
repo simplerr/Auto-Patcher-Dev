@@ -111,22 +111,20 @@ void PatcherDialog::UploadPatch()
 	CreateArchive("app", "data.zip", info);
 	mObserver->SetStatus("Creating archive...");
 	AddText("Archiving...\n");
-	Data data("data.txt");
+	Data data(CREDENTIALS_FILE);
 	AddText("Uploading...\n");
 	gFtpHandler->UploadFile(data.directory, "data.zip");
+	remove("data.zip");
 
 	// Create the version information file.
 	data.version = gFtpHandler->GetVersion() + 1;
 	data.modifyDate = GetDate();
 	data.files = info.files;
 	data.size = info.size;
-	data.WriteInformation("data.txt");
+	data.WriteInformation(CREDENTIALS_FILE);
 
 	// Upload the info file.
-	gFtpHandler->UploadFile(data.directory, "data.txt");
-
-	// Remove the temp info file.
-	remove("info.txt");
+	gFtpHandler->UploadFile(data.directory, CREDENTIALS_FILE);
 
 	mObserver->SetStatus("Latest version uploaded!");
 	AddText("Updated!\n-\n");

@@ -43,8 +43,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 MainWindow::MainWindow(HINSTANCE hInstance, string caption, int width, int height)
 	: Runnable(hInstance, caption, width, height)
 {
-	gFtpHandler = new FtpHandler();
 	mCurrentDialog = NULL;
+	gFtpHandler = new FtpHandler();
 }
 	
 void MainWindow::Init()
@@ -53,8 +53,10 @@ void MainWindow::Init()
 	// Create and init the state.
 	if(FindFirstFile(CREDENTIALS_FILE, &data) == INVALID_HANDLE_VALUE  && GetLastError() == ERROR_FILE_NOT_FOUND) 
 		mCurrentDialog = new CredentialsDialog();
-	else 
+	else {
+		gFtpHandler->Connect();
 		mCurrentDialog = new PatcherDialog();
+	}
 }
 
 MainWindow::~MainWindow()
@@ -69,6 +71,7 @@ LRESULT MainWindow::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		int asda = 1;
 	else if(wParam == IDM_PATCHER_DIALOG) {
 		delete mCurrentDialog;
+		gFtpHandler->Connect();
 		mCurrentDialog = new PatcherDialog();
 	}
 
