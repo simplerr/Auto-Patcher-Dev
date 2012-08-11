@@ -89,3 +89,8 @@ LRESULT MainWindow::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	// Default MsgProc.
 	return Runnable::MsgProc(msg, wParam, lParam);
 }
+
+BaseDialog* MainWindow::GetCurrentDialog()
+{
+	return mCurrentDialog;
+}

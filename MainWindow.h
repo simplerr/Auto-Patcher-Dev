@@ -13,6 +13,7 @@ public:
 
 	void Init();
 	LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam);
+	BaseDialog* GetCurrentDialog();
 private:
 	BaseDialog* mCurrentDialog;
 };

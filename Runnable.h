@@ -7,6 +7,8 @@
 using namespace std;
 void showMsg(std::string msg);
 
+class BaseDialog;
+
 //! Inits the window and contains the main loop.
 class Runnable
 {
@@ -15,6 +17,7 @@ public:
 	virtual ~Runnable();
 
 	int Run();
+	virtual BaseDialog* GetCurrentDialog() {return 0;}
 	virtual void Init() {};
 	virtual LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam);
 

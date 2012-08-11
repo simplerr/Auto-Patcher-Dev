@@ -1,4 +1,5 @@
 #include "Runnable.h"
+#include "BaseDialog.h"
 
 LRESULT CALLBACK
 MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -87,8 +88,11 @@ int Runnable::Run()
 		// If there are Window messages then process them
 		if(PeekMessage(&msg, 0, 0, 0, PM_REMOVE ))
 		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			if(!IsDialogMessage(gMainWindow->GetCurrentDialog()->GetHwnd(), &msg))
+			{
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
 		}
     }
 	return (int)msg.wParam;
