@@ -117,11 +117,11 @@ void FtpHandler::UploadFile(string dest, string file)
 // Loads the login credentials from a text file.
 void FtpHandler::LoadCredentials(string file)
 {
-	string trash;
-	ifstream fin(file);
-
-	fin >> mHost >> mUser >> mPass >> trash >> mWorkingDirectory;
-	fin.close();
+	Data data("data.txt");
+	mHost = data.hostname;
+	mUser = data.username;
+	mPass = data.password;
+	mWorkingDirectory = data.directory;
 }
 
 int FtpHandler::GetVersion()
