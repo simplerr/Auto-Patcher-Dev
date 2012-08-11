@@ -7,6 +7,7 @@
 using namespace std;
 void showMsg(std::string msg);
 
+//! Inits the window and contains the main loop.
 class Runnable
 {
 public:

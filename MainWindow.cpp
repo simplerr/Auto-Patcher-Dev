@@ -43,7 +43,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 MainWindow::MainWindow(HINSTANCE hInstance, string caption, int width, int height)
 	: Runnable(hInstance, caption, width, height)
 {
-	gFtpHandler = new FtpHandler("/simplers.org/data/", "data");
+	gFtpHandler = new FtpHandler();
 	mCurrentDialog = NULL;
 }
 	

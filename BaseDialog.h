@@ -3,6 +3,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+//! Base class for all dialogs.
 class BaseDialog
 {
 public:

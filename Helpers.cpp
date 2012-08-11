@@ -2,7 +2,47 @@
 #include <fstream>
 #include <time.h>
 #include <stack>
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#include <Richedit.h>
+#include <Commctrl.h>
 #include "zip.h"
+
+//! Adds text to a richedit control.
+/**
+@param hwnd Handle to the control.
+@param text The text to add.
+@param crNewColor The text color.
+@note Works on any window control, without the color effect.
+*/
+void AddEditText(HWND hwnd, string text, COLORREF crNewColor)
+{
+   char *Text = (char *)malloc(lstrlen(text.c_str()) + 5);
+   CHARFORMAT cf;
+   int iTotalTextLength = GetWindowTextLength(hwnd);
+   int iStartPos = iTotalTextLength;
+   int iEndPos;
+
+   strcpy(Text, text.c_str());
+
+   SendMessage(hwnd, EM_SETSEL, (WPARAM)(int)iTotalTextLength, (LPARAM)(int)iTotalTextLength);
+   SendMessage(hwnd, EM_REPLACESEL, (WPARAM)(BOOL)FALSE, (LPARAM)(LPCSTR)Text);
+
+   free(Text);
+
+   cf.cbSize      = sizeof(CHARFORMAT);
+   cf.dwMask      = CFM_COLOR | CFM_UNDERLINE | CFM_BOLD;
+   cf.dwEffects   = (unsigned long)~(CFE_AUTOCOLOR | CFE_UNDERLINE | CFE_BOLD);
+   cf.crTextColor = crNewColor;
+
+   iEndPos = GetWindowTextLength(hwnd);
+
+   SendMessage(hwnd, EM_SETSEL, (WPARAM)(int)iStartPos, (LPARAM)(int)iEndPos);
+   SendMessage(hwnd, EM_SETCHARFORMAT, (WPARAM)(UINT)SCF_SELECTION, (LPARAM)&cf);
+   SendMessage(hwnd, EM_HIDESELECTION, (WPARAM)(BOOL)TRUE, (LPARAM)(BOOL)FALSE);
+
+   SendMessage(hwnd, EM_LINESCROLL, (WPARAM)(int)0, (LPARAM)(int)1);
+}
 
 string GetText(HWND hwnd)
 {

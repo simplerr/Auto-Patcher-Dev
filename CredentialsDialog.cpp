@@ -32,9 +32,9 @@ LRESULT CALLBACK CredentialsDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARA
 			// Send message that will get catched by CredentialsDialog::MsgProc().
 			SendMessage(gMainWindow->GetHwnd(), WM_COMMAND, ID_GENERATE_FILE, NULL);
 			break;
-		case IDEXIT:
-			EndDialog(hWndDlg, 0);
-			PostQuitMessage(0);
+		case IDC_BACK:
+			// Tell MainWindow to change to the Patcher dialog.
+			SendMessage(gMainWindow->GetHwnd(), WM_COMMAND, IDM_PATCHER_DIALOG, NULL);
 			break;
 		}
 		break;
@@ -104,6 +104,8 @@ LRESULT CredentialsDialog::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		case ID_GENERATE_FILE:
 			GenerateFile();
 			MessageBox(0, "Credentials successfully updated!", "Success", 0);
+
+			// Tell MainWindow to change to the Patcher dialog.
 			SendMessage(gMainWindow->GetHwnd(), WM_COMMAND, IDM_PATCHER_DIALOG, NULL);
 			break;
 		case IDC_UPDATE_FILES:

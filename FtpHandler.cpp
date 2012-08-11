@@ -21,6 +21,11 @@ void ProgressObserver::SetStatus(string status)
 	mDialog->SetProgressStatus(status);
 }
 
+void ProgressObserver::AddText(string text)
+{
+	mDialog->AddText(text);
+}
+
 void ProgressObserver::OnBytesReceived(const TByteVector& vBuffer, long lReceivedBytes)
 {
 	mDialog->AddBytesReceived(lReceivedBytes);
@@ -31,7 +36,7 @@ void ProgressObserver::OnBytesSent(const TByteVector& vBuffer, long lSentBytes)
 	mDialog->AddBytesSent(lSentBytes);
 }
 
-FtpHandler::FtpHandler(string workingDirectory, string localDirectory)
+FtpHandler::FtpHandler()
 {
 	WORD wVersionRequested;
 	WSADATA wsaData;
@@ -46,11 +51,9 @@ FtpHandler::FtpHandler(string workingDirectory, string localDirectory)
 	CLogonInfo logonInfo(mHost, 21, mUser, mPass);
 
 	// Attempt to login.
-	if(!mFtpClient.Login(logonInfo))
+	mConnected = mFtpClient.Login(logonInfo);
+	if(!mConnected)
 		MessageBox(0, "Can't connect to server.", "Connection error", 0);
-
-	mWorkingDirectory = workingDirectory;
-	mLocalDirectory = localDirectory;
 }
 
 FtpHandler::~FtpHandler()
@@ -62,24 +65,15 @@ FtpHandler::~FtpHandler()
 // Returns true if there exist a newer version on the FTP server.
 bool FtpHandler::NewVersion()
 {
+	remove("tmp.txt");
+
 	// Compare the version files.
-	mFtpClient.DownloadFile(mWorkingDirectory + "version.txt", mLocalDirectory + "ftp_version.txt", CType::Image(), true); 
-	std::ifstream fin(mLocalDirectory +"ftp_version.txt");
+	mFtpClient.DownloadFile(mWorkingDirectory + "data.txt", "tmp.txt", CType::Image(), true); 
 
-	// Read the versions.
-	int ftpVersion, clientVersion;
-	fin >> ftpVersion;
-	fin.close();
+	Data ftpData("tmp.txt");
+	Data userData("data.txt");
 
-	// Remove temp file.
-	remove("data/ftp_version.txt");
-
-	fin.open("data/version.txt");
-	fin >> clientVersion;
-	fin.close();
-
-	// Does the client have the latest version?
-	return clientVersion < ftpVersion || clientVersion > 9999;
+	return userData.version < ftpData.version || userData.version > 9999;
 }
 	
 // Download all files in the remote directory.
@@ -88,11 +82,6 @@ void FtpHandler::DownloadAll(string remoteDirectory, string localDirectory)
 	// Get directory listing.
 	TSpFTPFileStatusVector list;
 	mFtpClient.List(remoteDirectory, list, true);
-
-	// Titles.
-	cout << "[File]";
-	//gotoxy(20, getxy().Y);
-	cout << "[Size]\n";
 
 	// Loop through and download all files.
 	for(auto iter = list.begin() + 2; iter != list.end(); iter++) {
@@ -118,11 +107,11 @@ void FtpHandler::UploadFile(string dest, string file)
 {
 	mObserver->SetFileSize(FileSize(file));
 	mObserver->SetStatus("Uploading: " + file);
+	mObserver->AddText("- " + file + "\n");
 		
+	// Remove and then upload the file.
 	mFtpClient.Delete(dest + file);
 	mFtpClient.UploadFile(file, dest + file, false, CRepresentation(CType::Image()), true);
-
-	mObserver->SetStatus("Latest version uploaded!");
 }
 
 // Loads the login credentials from a text file.
@@ -131,7 +120,7 @@ void FtpHandler::LoadCredentials(string file)
 	string trash;
 	ifstream fin(file);
 
-	fin >> mHost >> mUser >> mPass;
+	fin >> mHost >> mUser >> mPass >> trash >> mWorkingDirectory;
 	fin.close();
 }
 
@@ -191,4 +180,9 @@ void FtpHandler::SetObserver(ProgressObserver* observer)
 {
 	mObserver = observer;
 	mFtpClient.AttachObserver(mObserver);
+}
+
+bool FtpHandler::IsConnected()
+{
+	return mConnected;
 }

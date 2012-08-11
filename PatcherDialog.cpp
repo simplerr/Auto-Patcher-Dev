@@ -25,7 +25,7 @@ LRESULT CALLBACK PatcherDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARAM lP
 		case IDOK:
 			
 			break;
-		case IDEXIT:
+		case IDC_EXIT:
 			EndDialog(hWndDlg, 0);
 			PostQuitMessage(0);
 			break;
@@ -60,6 +60,14 @@ PatcherDialog::PatcherDialog()
 	gFtpHandler->SetObserver(mObserver);
 
 	Static_SetText(GetDlgItem(GetHwnd(), IDC_UPLOADING), "Upload progress:");
+
+	AddText("Connecting...\n");
+	if(gFtpHandler->IsConnected())
+		AddText("Connected!\n");
+	else
+		AddText("Error connecting!\n");
+
+	AddText("Waiting...\n");
 }
 	
 PatcherDialog::~PatcherDialog()
@@ -81,7 +89,7 @@ void PatcherDialog::UpdateInformation()
 
 	char versionText[25], sizeText[25], filesText[25];
 	sprintf(versionText, "Version: %i", version);
-	sprintf(sizeText, "Size: %i", size);
+	sprintf(sizeText, "Size: %.2f MB", size/1000000.0f);
 	sprintf(filesText, "Files: %i", files);
 	string modifyDate = "Updated: " + gFtpHandler->GetModifyDate();
 
@@ -100,13 +108,14 @@ void PatcherDialog::UploadPatch()
 
 	// Create the new archive and upload it.
 	ArchiveInfo info;
-	CreateArchive("data", "data.zip", info);
+	CreateArchive("app", "data.zip", info);
 	mObserver->SetStatus("Creating archive...");
-	Sleep(400);
-	gFtpHandler->UploadFile("/simplers.org/data/", "data.zip");
+	AddText("Archiving...\n");
+	Data data("data.txt");
+	AddText("Uploading...\n");
+	gFtpHandler->UploadFile(data.directory, "data.zip");
 
 	// Create the version information file.
-	Data data("data.txt");
 	data.version = gFtpHandler->GetVersion() + 1;
 	data.modifyDate = GetDate();
 	data.files = info.files;
@@ -114,10 +123,13 @@ void PatcherDialog::UploadPatch()
 	data.WriteInformation("data.txt");
 
 	// Upload the info file.
-	gFtpHandler->UploadFile("/simplers.org/data/", "data.txt");
+	gFtpHandler->UploadFile(data.directory, "data.txt");
 
 	// Remove the temp info file.
 	remove("info.txt");
+
+	mObserver->SetStatus("Latest version uploaded!");
+	AddText("Updated!\n-\n");
 
 	UpdateInformation();
 }
@@ -135,7 +147,6 @@ void PatcherDialog::AddBytesSent(long bytes)
 {
 	long pos = SendDlgItemMessage(GetHwnd(), IDC_PROGRESS1, PBM_GETPOS, 0, 0);
 	SendDlgItemMessage(GetHwnd(), IDC_PROGRESS1, PBM_SETPOS, pos + bytes, 0);
-	long max = SendDlgItemMessage(GetHwnd(), IDC_PROGRESS1, PBM_GETRANGE , false, NULL);
 }
 	
 void PatcherDialog::AddBytesReceived(long bytes)
@@ -146,11 +157,16 @@ void PatcherDialog::AddBytesReceived(long bytes)
 void PatcherDialog::SetFileSize(long size)
 {
 	SendDlgItemMessage(GetHwnd(), IDC_PROGRESS1, PBM_SETRANGE32 , 0, size);
-	long max = SendDlgItemMessage(GetHwnd(), IDC_PROGRESS1, PBM_GETRANGE , false, NULL);
 	SendDlgItemMessage(GetHwnd(), IDC_PROGRESS1, PBM_SETPOS, 0, 0);
 }
 
 void PatcherDialog::SetProgressStatus(string status)
 {
 	Static_SetText(GetDlgItem(GetHwnd(), IDC_UPLOADING), status.c_str());
+}
+
+void PatcherDialog::AddText(string text, COLORREF color)
+{
+	AddEditText(GetDlgItem(GetHwnd(), IDC_ACTION_LOG), text, color);
+	Sleep(250);
 }

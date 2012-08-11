@@ -2,6 +2,7 @@
 
 #include "BaseDialog.h"
 
+//! Dialog wrapper for the Credentials dialog.
 class CredentialsDialog : public BaseDialog
 {
 public:

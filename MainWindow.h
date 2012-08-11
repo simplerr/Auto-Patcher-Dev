@@ -4,6 +4,7 @@
 
 class FtpPatcher;
 
+//! The main window which extends Runnable.
 class MainWindow : public Runnable
 {
 public:
