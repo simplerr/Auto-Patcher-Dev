@@ -12,6 +12,7 @@ public:
 
 	void Init();
 
+	INT_PTR GetPatchNotes();
 	void UpdateInformation();
 	void UploadPatch();
 	void AddBytesSent(long bytes);

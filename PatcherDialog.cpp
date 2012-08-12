@@ -14,7 +14,7 @@
 #include <shlobj.h>		//for Shell API
 #include <Shlwapi.h>	//for Shell API
 
-// Procedure for the dialog box.
+// Procedure for the patcher dialog box.
 LRESULT CALLBACK PatcherDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	switch(Msg)
@@ -42,6 +42,45 @@ LRESULT CALLBACK PatcherDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARAM lP
 	case WM_CLOSE:
 		EndDialog(hWndDlg, 0);
 		PostQuitMessage(0);
+		break;
+	}
+
+	return 0;
+}
+
+// Procedure for the patch notes dialog box.
+LRESULT CALLBACK PatchNotesDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
+{
+	switch(Msg)
+	{
+	case WM_COMMAND:
+		switch(wParam)
+		{
+		case IDC_UPLOAD:
+			// Get the version and patch notes from the edit controls.
+			int patchLen = Edit_GetTextLength(GetDlgItem(hWndDlg, IDC_PATCH_NOTES));
+			char buffer[16];
+			Edit_GetText(GetDlgItem(hWndDlg, IDC_VERSION), buffer, 15);
+			char* notes = new char[patchLen+1];
+			Edit_GetText(GetDlgItem(hWndDlg, IDC_PATCH_NOTES), notes, patchLen+1);
+			string patchNotes = notes;
+			string version = buffer;
+			delete [] notes;
+
+			// Write the version and patch notes to PATCH_NOTES_FILE.
+			ofstream fout(PATCH_NOTES_FILE);
+			fout << version << endl;
+			fout << patchNotes;
+			fout.close();
+
+			// Close the dialog.
+			// Makes DialogBox(...) return IDC_UPLOAD.
+			EndDialog(hWndDlg, IDC_UPLOAD);
+			break;
+		}
+		break;
+	case WM_CLOSE:
+		EndDialog(hWndDlg, 0);
 		break;
 	}
 
@@ -97,8 +136,6 @@ void PatcherDialog::UpdateInformation()
 	Static_SetText(GetDlgItem(GetHwnd(), IDC_FTP_SIZE), sizeText);
 	Static_SetText(GetDlgItem(GetHwnd(), IDC_FTP_FILES), filesText);
 	Static_SetText(GetDlgItem(GetHwnd(), IDC_UPDATED_DATE), modifyDate.c_str());
-
-	// Local information.
 }
 
 void PatcherDialog::UploadPatch()
@@ -126,6 +163,9 @@ void PatcherDialog::UploadPatch()
 	// Upload the info file.
 	gFtpHandler->UploadFile(data.directory, CREDENTIALS_FILE);
 
+	// Upload the patch notes file.
+	gFtpHandler->UploadFile(data.directory, PATCH_NOTES_FILE);
+
 	mObserver->SetStatus("Latest version uploaded!");
 	AddText("Updated!\n-\n");
 
@@ -136,9 +176,18 @@ LRESULT PatcherDialog::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	// Upload all files to the FTP server.
 	if(lParam == IDM_UPDATE_FILES)
-		UploadPatch();
+	{
+		// Only if the "Upload" button was pressed in the dialog box.
+		if(GetPatchNotes() == IDC_UPLOAD)
+			UploadPatch();
+	}
 
 	return 0;
+}
+
+INT_PTR PatcherDialog::GetPatchNotes()
+{
+	return DialogBox(gMainWindow->GetInstance(), MAKEINTRESOURCE(IDD_DIALOG3), gMainWindow->GetHwnd(), (DLGPROC)PatchNotesDlgProc);
 }
 
 void PatcherDialog::AddBytesSent(long bytes)

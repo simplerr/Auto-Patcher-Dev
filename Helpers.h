@@ -8,6 +8,9 @@ using namespace std;
 
 #define ID_GENERATE_FILE 2001
 #define CREDENTIALS_FILE "data.sef"
+#define PATCH_NOTES_FILE "patch_notes.txt"
+
+//! Writ
 
 //! Structure with information about an zipped archive.
 struct ArchiveInfo
