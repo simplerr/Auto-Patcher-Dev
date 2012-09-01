@@ -55,7 +55,8 @@ LRESULT CALLBACK LoginDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 LoginDialog::LoginDialog()
 	: BaseDialog(IDD_DIALOG4, (DLGPROC)LoginDlgProc)
 {
-	
+	// Set focus to the password field.
+	SetFocus(GetDlgItem(GetHwnd(), IDC_PASSWORD));
 }
 	
 LoginDialog::~LoginDialog()

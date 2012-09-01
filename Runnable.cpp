@@ -1,5 +1,6 @@
 #include "Runnable.h"
 #include "BaseDialog.h"
+#include "resource.h"
 
 LRESULT CALLBACK
 MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -36,7 +37,7 @@ bool Runnable::InitWindow()
 	wc.cbClsExtra    = 0;
 	wc.cbWndExtra    = 0;
 	wc.hInstance     = mhInstance;
-	wc.hIcon         = LoadIcon(0, IDI_APPLICATION);
+	wc.hIcon         = LoadIcon(0, IDI_WINLOGO);
 	wc.hCursor       = LoadCursor(0, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName  = 0;
@@ -63,8 +64,10 @@ bool Runnable::InitWindow()
 		PostQuitMessage(0);
 	}
 
-	//ShowWindow(mhMainWindow, SW_HIDE);
+	ShowWindow(mhMainWindow, SW_HIDE);
 	UpdateWindow(mhMainWindow);
+
+	EnableWindow(mhMainWindow, false);
 
 	return true;
 }
