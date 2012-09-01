@@ -19,6 +19,12 @@
     <Filter Include="Source Files\zip">
       <UniqueIdentifier>{1ef54eab-6c29-4494-becf-3974a2974850}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Dialogs">
+      <UniqueIdentifier>{d43bf183-b424-4b71-be25-b0a14205fef4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Dialogs">
+      <UniqueIdentifier>{eaf5739a-d551-4033-8df5-1f0ee4d5a214}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Runnable.cpp">
@@ -42,13 +48,7 @@
     <ClCompile Include="ftp\FTPListParse.cpp">
       <Filter>Header Files\ftp</Filter>
     </ClCompile>
-    <ClCompile Include="CredentialsDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Helpers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PatcherDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BaseDialog.cpp">
@@ -65,6 +65,15 @@
     </ClCompile>
     <ClCompile Include="..\..\zip_utils_src\unzip.cpp">
       <Filter>Source Files\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CredentialsDialog.cpp">
+      <Filter>Source Files\Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="PatcherDialog.cpp">
+      <Filter>Source Files\Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginDialog.cpp">
+      <Filter>Source Files\Dialogs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -101,16 +110,7 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CredentialsDialog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Helpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PatcherDialog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FtpHandler.h">
@@ -124,6 +124,18 @@
     </ClInclude>
     <ClInclude Include="..\..\zip_utils_src\unzip.h">
       <Filter>Source Files\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseDialog.h">
+      <Filter>Header Files\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="CredentialsDialog.h">
+      <Filter>Header Files\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginDialog.h">
+      <Filter>Header Files\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="PatcherDialog.h">
+      <Filter>Header Files\Dialogs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

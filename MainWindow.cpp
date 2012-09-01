@@ -14,6 +14,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #include "PatcherDialog.h"
 #include "Helpers.h"
 #include "FtpHandler.h"
+#include "LoginDialog.h"
 
 // Set the globals.
 Runnable*	gMainWindow		= 0;
@@ -53,10 +54,8 @@ void MainWindow::Init()
 	// Create and init the state.
 	if(FindFirstFile(CREDENTIALS_FILE, &data) == INVALID_HANDLE_VALUE  && GetLastError() == ERROR_FILE_NOT_FOUND) 
 		mCurrentDialog = new CredentialsDialog();
-	else {
-		gFtpHandler->Connect();
-		mCurrentDialog = new PatcherDialog();
-	}
+	else 
+		mCurrentDialog = new LoginDialog();
 }
 
 MainWindow::~MainWindow()

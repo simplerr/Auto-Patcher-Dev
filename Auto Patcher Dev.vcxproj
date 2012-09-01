@@ -94,6 +94,7 @@
     <ClCompile Include="ftp\FTPFileState.cpp" />
     <ClCompile Include="ftp\FTPListParse.cpp" />
     <ClCompile Include="Helpers.cpp" />
+    <ClCompile Include="LoginDialog.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="PatcherDialog.cpp" />
     <ClCompile Include="Runnable.cpp" />
@@ -113,6 +114,7 @@
     <ClInclude Include="ftp\rc_smart_ptr.h" />
     <ClInclude Include="ftp\stdafx.h" />
     <ClInclude Include="Helpers.h" />
+    <ClInclude Include="LoginDialog.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="PatcherDialog.h" />
     <ClInclude Include="resource.h" />

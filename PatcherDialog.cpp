@@ -140,15 +140,23 @@ void PatcherDialog::UpdateInformation()
 
 void PatcherDialog::UploadPatch()
 {
+	// Load data from the credential file.
+	Data data(CREDENTIALS_FILE);
+
+	// Upload the info file.
+	gFtpHandler->UploadFile(data.directory, CREDENTIALS_FILE);
+
+	// Upload the patch notes file.
+	gFtpHandler->UploadFile(data.directory, PATCH_NOTES_FILE);
+
 	// Remove the data.zip if there is any.
 	remove("data.zip");
 
 	// Create the new archive and upload it.
+	mObserver->SetStatus("Creating archive...");
 	ArchiveInfo info;
 	CreateArchive("app", "data.zip", info);
-	mObserver->SetStatus("Creating archive...");
 	AddText("Archiving...\n");
-	Data data(CREDENTIALS_FILE);
 	AddText("Uploading...\n");
 	gFtpHandler->UploadFile(data.directory, "data.zip");
 	remove("data.zip");
@@ -159,12 +167,6 @@ void PatcherDialog::UploadPatch()
 	data.files = info.files;
 	data.size = info.size;
 	data.WriteInformation(CREDENTIALS_FILE);
-
-	// Upload the info file.
-	gFtpHandler->UploadFile(data.directory, CREDENTIALS_FILE);
-
-	// Upload the patch notes file.
-	gFtpHandler->UploadFile(data.directory, PATCH_NOTES_FILE);
 
 	mObserver->SetStatus("Latest version uploaded!");
 	AddText("Updated!\n-\n");
