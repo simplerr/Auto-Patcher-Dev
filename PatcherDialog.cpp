@@ -54,6 +54,9 @@ LRESULT CALLBACK PatchNotesDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARAM
 {
 	switch(Msg)
 	{
+	case WM_ACTIVATE: 
+			// Set focus to the version input box.
+			SetFocus(GetDlgItem(hWndDlg, IDC_VERSION));
 	case WM_COMMAND:
 		switch(wParam)
 		{
@@ -172,6 +175,9 @@ void PatcherDialog::UploadPatch()
 	data.files = info.files;
 	data.size = info.size;
 	data.WriteInformation(CREDENTIALS_FILE);
+
+	// [NOTE][HAX] Upload the info file again with the new information.
+	gFtpHandler->UploadFile(data.directory, CREDENTIALS_FILE);
 
 	mObserver->SetStatus("Latest version uploaded!");
 	AddText("Updated!\n-\n");

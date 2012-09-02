@@ -22,6 +22,9 @@ LRESULT CALLBACK CredentialsDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARA
 		switch(wParam)
 		{
 		case IDGENERATE:
+			// Read the old version.
+			dialogData.ReadInformation(CREDENTIALS_FILE);
+
 			// Store the input box values.
 			dialogData.hostname = GetText(GetDlgItem(hWndDlg, IDC_HOSTNAME));
 			dialogData.username = GetText(GetDlgItem(hWndDlg, IDC_USERNAME));
