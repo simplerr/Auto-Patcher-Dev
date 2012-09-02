@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <windowsx.h>
 #include <fstream>
+#include <process.h>
 #include "resource.h"
 #include "Runnable.h"
 #include "PatcherDialog.h"
@@ -140,6 +141,10 @@ void PatcherDialog::UpdateInformation()
 
 void PatcherDialog::UploadPatch()
 {
+	// Disable the edit credentials and upload button.
+	Button_Enable(GetDlgItem(GetHwnd(), IDC_EDIT_CREDENTIALS), false);
+	Button_Enable(GetDlgItem(GetHwnd(), IDC_UPDATE_FILES), false);
+
 	// Load data from the credential file.
 	Data data(CREDENTIALS_FILE);
 
@@ -172,6 +177,16 @@ void PatcherDialog::UploadPatch()
 	AddText("Updated!\n-\n");
 
 	UpdateInformation();
+
+	// Enable the edit credentials and upload button.
+	Button_Enable(GetDlgItem(GetHwnd(), IDC_EDIT_CREDENTIALS), true);
+	Button_Enable(GetDlgItem(GetHwnd(), IDC_UPDATE_FILES), true);
+}
+
+void PatcherDialog::UploadThreadEntryPoint(void* pThis)
+{
+	PatcherDialog* dialog = (PatcherDialog*)pThis;
+	dialog->UploadPatch();
 }
 
 LRESULT PatcherDialog::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
@@ -180,8 +195,10 @@ LRESULT PatcherDialog::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	if(lParam == IDM_UPDATE_FILES)
 	{
 		// Only if the "Upload" button was pressed in the dialog box.
-		if(GetPatchNotes() == IDC_UPLOAD)
-			UploadPatch();
+		if(GetPatchNotes() == IDC_UPLOAD) {
+			// Start a new thread that uploads all files.
+			_beginthread(PatcherDialog::UploadThreadEntryPoint, 0, this);
+		}
 	}
 
 	return 0;

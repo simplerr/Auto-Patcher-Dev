@@ -21,6 +21,9 @@ public:
 	void SetProgressStatus(string status);
 	void AddText(string text, COLORREF color = RGB(0, 0, 0));
 	LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam);
+
+	// Static entry point fot the upload thread.
+	static void UploadThreadEntryPoint(void* pThis);
 private:
 	ProgressObserver* mObserver;
 };
