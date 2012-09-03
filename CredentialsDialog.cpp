@@ -31,6 +31,7 @@ LRESULT CALLBACK CredentialsDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARA
 			dialogData.password = GetText(GetDlgItem(hWndDlg, IDC_PASSWORD));
 			dialogData.executable = GetText(GetDlgItem(hWndDlg, IDC_EXECUTABLE));
 			dialogData.directory = GetText(GetDlgItem(hWndDlg, IDC_DIRECTORY));
+			dialogData.autoRun = Button_GetCheck(GetDlgItem(hWndDlg, IDC_AUTORUN));
 
 			// Send message that will get catched by CredentialsDialog::MsgProc().
 			SendMessage(gMainWindow->GetHwnd(), WM_COMMAND, ID_GENERATE_FILE, NULL);
@@ -43,6 +44,7 @@ LRESULT CALLBACK CredentialsDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARA
 		break;
 	case WM_CLOSE:
 		EndDialog(hWndDlg, 0);
+		PostQuitMessage(0);
 		break;
 	}
 
@@ -75,6 +77,7 @@ void CredentialsDialog::Init()
 		Edit_SetText(GetDlgItem(GetHwnd(), IDC_PASSWORD), data.password.c_str());
 		Edit_SetText(GetDlgItem(GetHwnd(), IDC_EXECUTABLE), data.executable.c_str());
 		Edit_SetText(GetDlgItem(GetHwnd(), IDC_DIRECTORY), data.directory.c_str());
+		Button_SetCheck(GetDlgItem(GetHwnd(), IDC_AUTORUN), data.autoRun);
 	}
 }
 
