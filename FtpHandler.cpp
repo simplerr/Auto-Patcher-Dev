@@ -46,7 +46,7 @@ FtpHandler::FtpHandler()
     WSAStartup(wVersionRequested, &wsaData);
 }
 
-void FtpHandler::Connect()
+bool FtpHandler::Connect()
 {
 	// Load login credentials.
 	LoadCredentials(CREDENTIALS_FILE);
@@ -55,8 +55,7 @@ void FtpHandler::Connect()
 
 	// Attempt to login.
 	mConnected = mFtpClient.Login(logonInfo);
-	if(!mConnected)
-		MessageBox(0, "Can't connect to server.", "Connection error", 0);
+	return mConnected;
 }
 
 FtpHandler::~FtpHandler()

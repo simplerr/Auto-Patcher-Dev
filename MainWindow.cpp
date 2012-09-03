@@ -15,6 +15,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #include "Helpers.h"
 #include "FtpHandler.h"
 #include "LoginDialog.h"
+#include "Data.h"
 
 // Set the globals.
 Runnable*	gMainWindow		= 0;
@@ -69,9 +70,13 @@ LRESULT MainWindow::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	if(wParam == ID_GENERATE_FILE)
 		int asda = 1;
 	else if(wParam == IDM_PATCHER_DIALOG) {
-		delete mCurrentDialog;
-		gFtpHandler->Connect();
-		mCurrentDialog = new PatcherDialog();
+		if(!gFtpHandler->Connect()) {
+			MessageBox(0, "Can't connect to server.", "Connection error", 0);
+		}
+		else {
+			delete mCurrentDialog;
+			mCurrentDialog = new PatcherDialog();
+		}
 	}
 
 	// Message sent when the Patcher dialogs "edit credentials button is pressed".
