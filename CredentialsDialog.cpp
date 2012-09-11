@@ -54,7 +54,7 @@ LRESULT CALLBACK CredentialsDlgProc(HWND hWndDlg, UINT Msg, WPARAM wParam, LPARA
 CredentialsDialog::CredentialsDialog()
 	: BaseDialog(IDD_DIALOG1, (DLGPROC)CredentialsDlgProc)
 {
-	
+	SetFocus(GetDlgItem(GetHwnd(), IDC_HOSTNAME));
 }
 	
 CredentialsDialog::~CredentialsDialog()
@@ -86,6 +86,11 @@ void CredentialsDialog::GenerateFile()
 	// Ouput the data to the file.
 	dialogData.WriteInformation(CREDENTIALS_FILE);
 	dialogData.ReadInformation(CREDENTIALS_FILE);
+}
+
+void CredentialsDialog::HideBack()
+{
+	EnableWindow(GetDlgItem(GetHwnd(), IDC_BACK), false);
 }
 
 LRESULT CredentialsDialog::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)

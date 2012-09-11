@@ -13,5 +13,6 @@ public:
 	LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam);
 
 	void GenerateFile();
+	void HideBack();
 private:
 };

@@ -240,5 +240,4 @@ void PatcherDialog::SetProgressStatus(string status)
 void PatcherDialog::AddText(string text, COLORREF color)
 {
 	AddEditText(GetDlgItem(GetHwnd(), IDC_ACTION_LOG), text, color);
-	Sleep(250);
 }
